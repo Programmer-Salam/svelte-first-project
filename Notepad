@@ -1,0 +1,96 @@
+<script>
+	let note = '';
+	let note_id = 0;
+	let notes = [
+			{
+				id: 1,
+				content: 'First note',
+				editing: false
+			},
+			{
+				id: 2,
+				content: 'Second note',
+				editing: false
+			},
+	];
+	function saveNote(){
+			notes = [...notes,{
+				id: note_id++,
+				content: note,
+				editing: false
+			}];
+			note_id = note_id++;
+			note = '';
+	}   
+
+	function editNote(note){
+		note.editing = true;
+		note = note;
+	}
+	 function finishEdit(note){
+		note.editing = false;
+			notes = notes;
+			
+	 }
+	function onKeyEdit(event, note){
+         if (event.key == 'Enter') {
+			finishEdit(note)
+		 }
+	}
+	function deleteNote(id){
+         notes = notes.filter(note_to_delete => note_to_delete.id != id)
+	}
+</script>
+
+<main>
+	<div>
+			<form on:submit|preventDefault={saveNote}>
+				<h1>Add new note</h1>
+				<textarea
+				 bind:value={note}
+				  placeholder="Type a new note here"></textarea>
+				  <input type="submit" value="Saved">
+				  <hr>
+				  <h2>Our note history</h2>
+				{#if notes}
+				{#each notes as note}
+				{#if note.editing}
+					<textarea bind:value={note.content} on:keypress={onKeyEdit(event, note)}></textarea>
+				{:else}
+				<p>{note.content}</p>
+					 <!-- content here -->
+				{/if}
+				<hr>
+				<button on:click={deleteNote(note.id)}>Delete Note</button>
+				<button on:click={editNote(note)}>Edit Note</button>
+					 <!-- content here -->
+				{/each}
+				{:else}
+				<h4>No records of note</h4>
+				{/if}
+
+			</form>
+	</div>
+</main>
+<style>
+
+	main {
+		text-align: center;
+		padding: 1em;
+		max-width: 240px;
+		margin: 0 auto;
+	}
+
+	h1 {
+		color: #ff3e00;
+		text-transform: uppercase;
+		font-size: 4em;
+		font-weight: 100;
+	}
+
+	@media (min-width: 640px) {
+		main {
+			max-width: none;
+		}
+	}
+</style>
